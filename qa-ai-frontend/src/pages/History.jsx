@@ -667,7 +667,11 @@ const addSuggestionAsTC = async (suggestion) => {
             {coverage && (
               <div className="mb-4">
                 <h3 className="font-semibold mb-2">
-                  Coverage ({coverage.covered}/{coverage.total})
+                  Coverage (
+                    {coverage?.coverage?.filter(c => c.covered).length || 0}
+                    /
+                    {coverage?.coverage?.length || 0}
+                  )
                 </h3>
 
                 <div className="space-y-3">

@@ -1,196 +1,14 @@
 [
   {
     "id": "US-001",
-    "timestamp": "2026-04-10T14:21:06.416Z",
-    "title": "Pay with saved credit card",
-    "acceptance_criteria": [
-      {
-        "scenario": "Happy Path",
-        "given": "The user has a saved credit card",
-        "when": "The user selects the saved credit card as the payment method",
-        "then": "The payment is processed successfully"
-      },
-      {
-        "scenario": "Negative Case",
-        "given": "The user has no saved credit cards",
-        "when": "The user tries to pay with a saved credit card",
-        "then": "An error message is displayed prompting the user to add a credit card"
-      },
-      {
-        "scenario": "Edge Case",
-        "given": "The user has multiple saved credit cards",
-        "when": "The user selects one of the saved credit cards as the payment method",
-        "then": "The payment is processed successfully with the selected credit card"
-      },
-      {
-        "scenario": "Alternative Flow",
-        "given": "The user's credit card has expired",
-        "when": "The user tries to pay with the expired credit card",
-        "then": "An error message is displayed prompting the user to update their credit card information"
-      }
-    ],
-    "feature_type": "payment",
-    "user_story": "As a user, I want to pay with my saved credit card, So that I can make payments quickly and easily",
-    "risks": [
-      {
-        "type": "security",
-        "description": "PCI compliance issues due to improper credit card data handling",
-        "risk_level": "high"
-      },
-      {
-        "type": "technical",
-        "description": "Payment processing issues due to integration failures with the payment gateway",
-        "risk_level": "medium"
-      },
-      {
-        "type": "functional",
-        "description": "Duplicate transactions due to concurrent payment requests",
-        "risk_level": "medium"
-      },
-      {
-        "type": "data",
-        "description": "Data inconsistency due to async failures in updating the user's credit card information",
-        "risk_level": "low"
-      }
-    ],
-    "test_cases": [
-      {
-        "title": "Successful payment with saved credit card",
-        "steps": [
-          "Add a credit card to the user's account",
-          "Select the saved credit card as the payment method",
-          "Complete the payment process"
-        ],
-        "expected_result": "The payment is processed successfully",
-        "priority": "high"
-      },
-      {
-        "title": "Failed payment due to expired credit card",
-        "steps": [
-          "Add an expired credit card to the user's account",
-          "Select the expired credit card as the payment method",
-          "Complete the payment process"
-        ],
-        "expected_result": "An error message is displayed prompting the user to update their credit card information",
-        "priority": "medium"
-      },
-      {
-        "title": "Duplicate transaction handling",
-        "steps": [
-          "Add a credit card to the user's account",
-          "Select the saved credit card as the payment method",
-          "Simulate concurrent payment requests"
-        ],
-        "expected_result": "The system handles the duplicate transactions correctly and prevents duplicate payments",
-        "priority": "high"
-      },
-      {
-        "title": "Payment processing issue due to integration failure",
-        "steps": [
-          "Add a credit card to the user's account",
-          "Select the saved credit card as the payment method",
-          "Simulate an integration failure with the payment gateway"
-        ],
-        "expected_result": "An error message is displayed prompting the user to try again later",
-        "priority": "medium"
-      },
-      {
-        "title": "Saved credit card with a cancelled account",
-        "steps": [
-          "Save a credit card with a cancelled account",
-          "Attempt to make a payment using the saved credit card"
-        ],
-        "expected_result": "Payment fails with an error message indicating a cancelled account",
-        "priority": "medium"
-      },
-      {
-        "title": "Saved credit card with a declined account",
-        "steps": [
-          "Log in to the application",
-          "Navigate to the payment page",
-          "Select a saved credit card with a declined account",
-          "Attempt to make a payment"
-        ],
-        "expected_result": "An error message is displayed prompting the user to add a new credit card",
-        "type": "negative",
-        "priority": "high"
-      },
-      {
-        "title": "Saved credit card with a security freeze",
-        "steps": [
-          "Log in to the application",
-          "Navigate to the payment page",
-          "Select a saved credit card with a security freeze",
-          "Attempt to make a payment"
-        ],
-        "expected_result": "An error message is displayed prompting the user to contact the bank",
-        "type": "edge",
-        "priority": "high"
-      },
-      {
-        "title": "Saved credit card with a merchant-specific issue",
-        "steps": [
-          "Log in to the application",
-          "Navigate to the payment page",
-          "Select a saved credit card with a merchant-specific issue",
-          "Attempt to make a payment"
-        ],
-        "expected_result": "An error message is displayed prompting the user to contact the merchant",
-        "type": "edge",
-        "priority": "medium"
-      },
-      {
-        "title": "Saved credit card with a security freeze",
-        "steps": [
-          "Log in to the application",
-          "Navigate to the payment page",
-          "Select a saved credit card with a security freeze",
-          "Attempt to make a payment"
-        ],
-        "expected_result": "An error message is displayed prompting the user to contact the bank",
-        "type": "edge",
-        "priority": "high"
-      },
-      {
-        "title": "Saved credit card with a user account change",
-        "steps": [
-          "Create a saved credit card",
-          "Change the user account associated with the saved credit card",
-          "Attempt to make a payment using the saved credit card",
-          "Verify that the payment is processed using the updated user account"
-        ],
-        "expected_result": "The payment is processed successfully using the updated user account",
-        "type": "performance",
-        "priority": "low"
-      },
-      {
-        "title": "Saved Credit Card with Zero Balance",
-        "steps": [
-          "Create a saved credit card with a zero balance",
-          "Select the saved credit card as the payment method",
-          "Process the payment"
-        ],
-        "expected_result": "Payment should fail due to insufficient funds",
-        "type": "edge",
-        "priority": "medium"
-      }
-    ],
-    "metrics": {
-      "risk_count": 4,
-      "high_risk": 1,
-      "test_count": 9
-    }
-  },
-  {
-    "id": "US-002",
-    "timestamp": "2026-04-12T03:40:39.325Z",
+    "timestamp": "2026-04-13T03:16:48.291Z",
     "title": "Validate Numeric Characters in Password",
     "acceptance_criteria": [
       {
         "scenario": "Happy Path",
         "given": "The user is creating a new account",
         "when": "The user enters a password with at least one numeric character",
-        "then": "The system accepts the password and allows the user to proceed"
+        "then": "The system accepts the password and proceeds with the account creation"
       },
       {
         "scenario": "Negative Case",
@@ -202,7 +20,7 @@
         "scenario": "Edge Case",
         "given": "The user is creating a new account",
         "when": "The user enters a password with only numeric characters",
-        "then": "The system accepts the password and allows the user to proceed"
+        "then": "The system accepts the password and proceeds with the account creation"
       },
       {
         "scenario": "Alternative Flow",
@@ -212,7 +30,7 @@
       }
     ],
     "feature_type": "authentication",
-    "user_story": "As a user, I want to ensure my password contains numeric characters, so that I can enhance the security of my account",
+    "user_story": "As a user, I want to ensure my password contains numeric characters, So that I can enhance the security of my account",
     "risks": [
       {
         "type": "security",
@@ -220,141 +38,97 @@
         "risk_level": "high"
       },
       {
+        "type": "functional",
+        "description": "Incorrect password validation logic",
+        "risk_level": "medium"
+      },
+      {
         "type": "technical",
         "description": "Inconsistent password validation across different platforms",
         "risk_level": "medium"
       },
       {
-        "type": "functional",
-        "description": "Incorrect error messages or feedback to the user",
+        "type": "integration",
+        "description": "Password validation issues with third-party authentication services",
         "risk_level": "low"
       }
     ],
     "test_cases": [
       {
-        "title": "Valid Password with Numeric Characters",
+        "title": "Happy Path - Password with Numeric Characters",
         "steps": [
+          "Create a new account",
           "Enter a password with at least one numeric character",
-          "Submit the password",
-          "Verify the system accepts the password"
+          "Submit the account creation form"
         ],
-        "expected_result": "The system accepts the password and allows the user to proceed",
+        "expected_result": "The system accepts the password and creates the account",
         "priority": "high"
       },
       {
-        "title": "Invalid Password without Numeric Characters",
+        "title": "Negative Case - Password without Numeric Characters",
         "steps": [
+          "Create a new account",
           "Enter a password without any numeric characters",
-          "Submit the password",
-          "Verify the system displays an error message"
+          "Submit the account creation form"
         ],
         "expected_result": "The system displays an error message indicating that the password must contain at least one numeric character",
         "priority": "high"
       },
       {
-        "title": "Password with Only Numeric Characters",
+        "title": "Edge Case - Password with Only Numeric Characters",
         "steps": [
+          "Create a new account",
           "Enter a password with only numeric characters",
-          "Submit the password",
-          "Verify the system accepts the password"
+          "Submit the account creation form"
         ],
-        "expected_result": "The system accepts the password and allows the user to proceed",
+        "expected_result": "The system accepts the password and creates the account",
         "priority": "medium"
       },
       {
-        "title": "Concurrent Password Updates",
+        "title": "Alternative Flow - Update Password with Numeric Characters",
         "steps": [
-          "Update the password with a new password containing numeric characters",
-          "Simultaneously update the password again with a different password containing numeric characters",
-          "Verify the system updates the password correctly and displays a success message"
+          "Log in to an existing account",
+          "Update the password with a new password containing at least one numeric character",
+          "Submit the password update form"
+        ],
+        "expected_result": "The system updates the password and displays a success message",
+        "priority": "medium"
+      },
+      {
+        "title": "Concurrency Scenario - Multiple Password Updates",
+        "steps": [
+          "Log in to an existing account",
+          "Update the password with a new password containing at least one numeric character",
+          "Immediately update the password again with another new password containing at least one numeric character"
         ],
         "expected_result": "The system updates the password correctly and displays a success message",
-        "priority": "medium"
-      },
-      {
-        "title": "Password with Special Characters and Numeric Characters",
-        "steps": [
-          "The user is creating a new account",
-          "The user enters a password with at least one numeric character and one special character (@, #, $, etc.)",
-          "The system accepts the password and allows the user to proceed"
-        ],
-        "expected_result": "The system should accept the password with special characters and numeric characters",
-        "priority": "medium"
-      },
-      {
-        "title": "Password with Numeric Characters and Special Characters in the Middle",
-        "steps": [
-          "Enter a new password with numeric characters and special characters in the middle (e.g., 1a!2b3)",
-          "Submit the password update form"
-        ],
-        "expected_result": "The system updates the password and displays a success message",
-        "type": "edge",
-        "priority": "medium"
-      },
-      {
-        "title": "Password with Leading Zeroes",
-        "steps": [
-          "Enter a password with leading zeroes (e.g., 0123)",
-          "Submit the password update form"
-        ],
-        "expected_result": "The system updates the password and displays a success message",
-        "type": "edge",
-        "priority": "medium"
-      },
-      {
-        "title": "Password with Trailing Zeroes",
-        "steps": [
-          "Enter a new password with numeric characters and trailing zeroes (e.g., 12300)",
-          "Submit the password update request"
-        ],
-        "expected_result": "The system updates the password and displays a success message",
-        "type": "edge",
-        "priority": "medium"
-      },
-      {
-        "title": "Password with Numeric Characters and Special Characters at the End",
-        "steps": [
-          "Enter a new password with at least one numeric character and a special character at the end",
-          "Submit the password update form"
-        ],
-        "expected_result": "The system updates the password and displays a success message",
-        "type": "edge",
-        "priority": "high"
-      },
-      {
-        "title": "Password with Very Short Numeric Characters",
-        "steps": [
-          "Enter a new password with very short numeric characters, e.g., '1'"
-        ],
-        "expected_result": "The system updates the password and displays a success message",
-        "type": "edge",
         "priority": "low"
       },
       {
-        "title": "Password with Zero-Length Numeric Characters",
+        "title": "Password with Special Characters",
         "steps": [
-          "Enter a new password with zero-length numeric characters (e.g., '123' or '001')",
-          "Submit the password update"
+          "Given The user is creating a new account",
+          "When The user enters a password with at least one numeric character and at least one special character",
+          "Then The system accepts the password and proceeds with the account creation"
         ],
-        "expected_result": "The system should reject the password update due to invalid numeric characters",
-        "type": "edge",
-        "priority": "medium"
+        "expected_result": "The system accepts the password and proceeds with the account creation",
+        "priority": "high"
       },
       {
-        "title": "Password with Numeric Characters and Special Characters in the Middle (Non-English Characters)",
+        "title": "Password with Numeric Characters and Special Characters",
         "steps": [
-          "Enter a new password with at least one numeric character and special characters from non-English languages (e.g., Chinese, Japanese, Korean)",
-          "Submit the password update form"
+          "Create a password with numeric characters and special characters (e.g., abc123!)",
+          "Submit the password for validation"
         ],
-        "expected_result": "The system updates the password and displays a success message",
+        "expected_result": "The password should be valid despite containing both numeric characters and special characters.",
         "type": "edge",
         "priority": "medium"
       }
     ],
     "metrics": {
-      "risk_count": 3,
+      "risk_count": 4,
       "high_risk": 1,
-      "test_count": 5
+      "test_count": 7
     }
   }
 ]

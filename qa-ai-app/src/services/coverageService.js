@@ -62,7 +62,10 @@ Expected: ${tc.expected}
 `).join("\n")}
 
 RULES (VERY IMPORTANT):
-
+- Return ONLY valid JSON.
+- Do NOT include explanations.
+- Do NOT include markdown.
+- Do NOT include text before or after JSON.
 - DO NOT create new acceptance criteria
 - DO NOT infer additional scenarios
 - DO NOT split acceptance criteria
@@ -108,36 +111,27 @@ Return ONLY JSON:
     }
   );
 
-  let content = response.data.choices[0].message.content;
+let content = response.data.choices[0].message.content;
 
-    content = content.replace(/```json|```/g, "").trim();
+  // 🔥 1. limpiar markdown
+  content = content.replace(/```json|```/g, "").trim();
 
-    let parsed;
+  // 🔥 2. extraer SOLO el JSON
+  const match = content.match(/\{[\s\S]*\}/);
 
-    try {
-      parsed = JSON.parse(content);
-    } catch {
-      const match = content.match(/\{[\s\S]*\}/);
-      parsed = match ? JSON.parse(match[0]) : { coverage: [] };
-    }
+  if (!match) {
+    console.error("❌ No JSON found in response:", content);
+    return { coverage: [] };
+  }
 
-    // 🧠 ENRIQUECER RESPUESTA PARA UI
-    const enriched = parsed.coverage.map((c, i) => {
-      const original = formattedAC[i];
+  try {
+    return JSON.parse(match[0]);
+  } catch (err) {
+    console.error("❌ JSON parse failed:", err);
+    console.error("RAW:", content);
 
-      return {
-        ...c,
-        given: original?.given,
-        when: original?.when,
-        then: original?.then
-      };
-    });
-
-    return {
-      coverage: enriched,
-      total: enriched.length,
-      covered: enriched.filter(c => c.covered).length
-    };
+    return { coverage: [] };
+  }
 
   } catch (err) {
     console.error("❌ COVERAGE ERROR:", err);
