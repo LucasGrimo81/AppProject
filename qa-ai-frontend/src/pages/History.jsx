@@ -39,6 +39,12 @@ function History() {
     loadFullHistory();
   }, []);
 
+  useEffect(() => {
+    if (selectedUS?.id) {
+      loadCoverage(selectedUS.id);
+    }
+  }, [selectedUS]);
+
   const loadCoverage = async (usId) => {
       try {
         const res = await fetch(`http://localhost:3000/coverage/${usId}`);
@@ -127,38 +133,32 @@ function History() {
   // AGREGAR SUGGESTIONS
 const addSuggestionAsTC = async (suggestion) => {
   try {
-    const payload = {
-      usId: selectedUS.id,
-      testCase: suggestion
-    };
-
+    // 1. guardar en backend
     await fetch("http://localhost:3000/history/add-test-case", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify({
+        usId: selectedUS.id,
+        testCase: suggestion
+      })
     });
 
-    // 🔥 1. TRAER HISTORY NUEVO
+    // 2. traer history actualizado
     const res = await fetch("http://localhost:3000/history?full=true");
     const updatedHistory = await res.json();
 
-    // 🔥 2. ACTUALIZAR TODO
-    setFullHistory(updatedHistory);
-
     const updatedUS = updatedHistory.find(u => u.id === selectedUS.id);
 
+    // 3. actualizar UI
+    setFullHistory(updatedHistory);
     setSelectedUS(updatedUS);
 
-    // 🔥 3. RECALCULAR COVERAGE CON DATA NUEVA
-    if (updatedUS?.test_cases?.length > 0) {
-      await loadCoverage(updatedUS.id);
-    } else {
-      setCoverage(null); // evita []
-    }
+    // 4. 🔥 recalcular coverage (CLAVE)
+    await loadCoverage(updatedUS.id);
 
-    // 🔥 4. LIMPIAR suggestions
+    // 5. limpiar suggestions
     setCoverageSuggestions({});
 
   } catch (err) {
@@ -359,6 +359,32 @@ const addSuggestionAsTC = async (suggestion) => {
     ? [selectedUS.acceptance_criteria]
     : []
     ;
+
+    const autoFixCoverage = async () => {
+      const uncovered = coverage.coverage
+        .filter(c => !c.covered)
+        .map(c => c.acceptance_criteria);
+
+      if (uncovered.length === 0) return;
+
+      const res = await fetch("http://localhost:3000/suggestions/generate-from-coverage", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          us: selectedUS,
+          uncovered
+        })
+      });
+
+      const data = await res.json();
+
+      // 🔥 agregar todos los test cases automáticamente
+      for (const tc of data.suggestions) {
+        await addSuggestionAsTC(tc);
+      }
+    };
 
    return (
     <div className="p-6">
@@ -708,6 +734,17 @@ const addSuggestionAsTC = async (suggestion) => {
                       <p className="text-xs text-gray-600 mt-1">
                         {c.reason}
                       </p>
+
+
+                      {!c.covered && (
+                        <button
+                          onClick={autoFixCoverage}
+                          className="bg-blue-600 text-white px-3 py-1 rounded"
+                        >
+                          Auto Fix Coverage
+                        </button>
+                      )}
+                      
 
                       {!c.covered && (
                         <button

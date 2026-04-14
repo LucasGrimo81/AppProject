@@ -25,4 +25,64 @@ router.post("/", async (req, res) => {
   }
 });
 
+
+
+router.post("/generate-from-coverage", async (req, res) => {
+  const { us, uncovered } = req.body;
+
+  const safeAC = uncovered
+  .filter(Boolean) // elimina null
+  .map(ac => {
+    if (typeof ac === "string") {
+      return {
+        scenario: "",
+        given: ac,
+        when: "",
+        then: ""
+      };
+    }
+
+    return {
+      scenario: ac?.scenario || "",
+      given: ac?.given || "",
+      when: ac?.when || "",
+      then: ac?.then || ""
+    };
+  });
+
+  const prompt = `
+You are a senior QA engineer.
+
+Generate high-value test cases ONLY for uncovered acceptance criteria.
+
+UNCOVERED ACCEPTANCE CRITERIA:
+${safeAC.map((ac, i) => `
+AC-${i+1}:
+Scenario: ${ac.scenario}
+Given ${ac.given}
+When ${ac.when}
+Then ${ac.then}
+`).join("\n")}
+
+RULES:
+- Focus on missing coverage
+- Do not repeat existing tests
+- Include edge cases
+- Include negative scenarios
+
+Return JSON:
+{
+  "suggestions": [
+    {
+      "title": "...",
+      "priority": "high|medium|low"
+    }
+  ]
+}
+`;
+
+  // llamada a IA igual que ya tenés
+});
+
 export default router;
+

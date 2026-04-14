@@ -35,18 +35,22 @@ export const generateCoverage = async (us) => {
 
     if (!us.test_cases || us.test_cases.length === 0) {
       return {
-        coverage: [],
-        total: 0,
-        covered: 0
+        coverage: us.acceptance_criteria.map(ac => ({
+          acceptance_criteria: ac,
+          covered: false,
+          matching_test_cases: [],
+          reason: "No test cases available"
+        }))
       };
     }
   
   const prompt = `
-You are a senior QA expert.
+You are a senior QA engineer.
 
-Your task is STRICTLY to evaluate coverage between acceptance criteria and test cases.
+STRICT TASK:
+Evaluate test coverage ONLY for the provided Acceptance Criteria.
 
-ACCEPTANCE CRITERIA (DO NOT MODIFY):
+ACCEPTANCE CRITERIA (SOURCE OF TRUTH):
 ${formattedAC.map(ac => `
 ${ac.id} - ${ac.scenario}
 Given ${ac.given}
@@ -69,8 +73,9 @@ RULES (VERY IMPORTANT):
 - DO NOT create new acceptance criteria
 - DO NOT infer additional scenarios
 - DO NOT split acceptance criteria
+- DO NOT transform test cases into acceptance criteria
 - ONLY evaluate the EXACT acceptance criteria provided
-- Each output item MUST correspond 1:1 with the original acceptance criteria
+- Each output item MUST correspond 1:1 with the original acceptance criteria list above
 - If there are 3 acceptance criteria, return EXACTLY 3 results
 - DO NOT add extra items
 - Return EXACTLY ${formattedTC.length} items
@@ -86,8 +91,7 @@ Return ONLY JSON:
 {
   "coverage": [
     {
-      "ac_id": "AC-1"
-      "acceptance_criteria": "EXACT original text",
+      "ac_index": "AC-1"
       "covered": true,
       "matching_test_cases": ["TC-1"],
       "reason": "short explanation"

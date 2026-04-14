@@ -130,5 +130,130 @@
       "high_risk": 1,
       "test_count": 7
     }
+  },
+  {
+    "id": "US-002",
+    "timestamp": "2026-04-13T11:45:40.361Z",
+    "title": "Pay with saved credit card",
+    "acceptance_criteria": [
+      {
+        "scenario": "Happy Path",
+        "given": "The user has a saved credit card",
+        "when": "The user selects the saved credit card as the payment method",
+        "then": "The payment is processed successfully and the user is redirected to a confirmation page"
+      },
+      {
+        "scenario": "Negative Case",
+        "given": "The user has a saved credit card with insufficient funds",
+        "when": "The user selects the saved credit card as the payment method",
+        "then": "The payment is declined and the user is displayed an error message"
+      },
+      {
+        "scenario": "Edge Case",
+        "given": "The user has a saved credit card that is about to expire",
+        "when": "The user selects the saved credit card as the payment method",
+        "then": "The system prompts the user to update the credit card expiration date before processing the payment"
+      },
+      {
+        "scenario": "Alternative Flow",
+        "given": "The user has multiple saved credit cards",
+        "when": "The user selects a different saved credit card as the payment method",
+        "then": "The payment is processed successfully using the newly selected credit card"
+      }
+    ],
+    "feature_type": "payment",
+    "user_story": "As a user, I want to pay with my saved credit card, So that I can make payments quickly and easily",
+    "risks": [
+      {
+        "type": "security",
+        "description": "PCI non-compliance due to improper credit card data storage",
+        "risk_level": "high"
+      },
+      {
+        "type": "technical",
+        "description": "Payment processing issues due to integration failures with the payment gateway",
+        "risk_level": "medium"
+      },
+      {
+        "type": "functional",
+        "description": "Duplicate transactions due to concurrent payment requests",
+        "risk_level": "medium"
+      },
+      {
+        "type": "data",
+        "description": "Inconsistent credit card data due to asynchronous updates",
+        "risk_level": "low"
+      }
+    ],
+    "test_cases": [
+      {
+        "title": "Happy Path Payment Processing",
+        "steps": [
+          "Select a saved credit card as the payment method",
+          "Enter a valid payment amount",
+          "Submit the payment request"
+        ],
+        "expected_result": "The payment is processed successfully and the user is redirected to a confirmation page",
+        "priority": "high"
+      },
+      {
+        "title": "Negative Case Payment Decline",
+        "steps": [
+          "Select a saved credit card with insufficient funds as the payment method",
+          "Enter a valid payment amount",
+          "Submit the payment request"
+        ],
+        "expected_result": "The payment is declined and the user is displayed an error message",
+        "priority": "medium"
+      },
+      {
+        "title": "Edge Case Credit Card Expiration",
+        "steps": [
+          "Select a saved credit card that is about to expire as the payment method",
+          "Enter a valid payment amount",
+          "Submit the payment request"
+        ],
+        "expected_result": "The system prompts the user to update the credit card expiration date before processing the payment",
+        "priority": "medium"
+      },
+      {
+        "title": "Concurrency Test",
+        "steps": [
+          "Select a saved credit card as the payment method",
+          "Enter a valid payment amount",
+          "Submit the payment request twice in rapid succession"
+        ],
+        "expected_result": "The system processes only one payment request and prevents duplicate transactions",
+        "priority": "high"
+      },
+      {
+        "title": "Multiple Saved Credit Cards with Same Expiration Date",
+        "steps": [
+          "Log in to the application with a user account",
+          "Navigate to the saved credit cards page",
+          "Create multiple saved credit cards with the same expiration date",
+          "Attempt to process a payment using one of the saved credit cards"
+        ],
+        "expected_result": "The payment is processed successfully without any issues",
+        "type": "edge",
+        "priority": "low"
+      },
+      {
+        "title": "Credit Card Expiration Date in the Past",
+        "steps": [
+          "Create a saved credit card with an expiration date in the past",
+          "Select the saved credit card as the payment method",
+          "Verify that the payment is declined due to the expired credit card"
+        ],
+        "expected_result": "Payment declined due to expired credit card",
+        "type": "edge",
+        "priority": "high"
+      }
+    ],
+    "metrics": {
+      "risk_count": 4,
+      "high_risk": 1,
+      "test_count": 6
+    }
   }
 ]
